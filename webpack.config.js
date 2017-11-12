@@ -2,13 +2,13 @@ const path = require('path');
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-const isProduction = process.env.NODE_ENV === "production";
+const isProduction = process.env.NODE_ENV === 'production';
 
-const config = {
-  entry: './src/feed/index.js',
+const basicConfig = {
+  entry: './src/Feed/index.js',
   output: {
     path: path.resolve(__dirname, 'public', 'feed'),
-    filename: 'index.js'
+    filename: 'bundle.js'
   },
   module: {
     rules: [
@@ -21,19 +21,18 @@ const config = {
             options: {
               minimize: true
             }
-          },
+          }
         })
       },
       {
-        test: /\.js$/,
-        exclude: /node_modules/,
+        test: /\.js/,
         use: [
           {
             loader: 'babel-loader',
             options: {
               presets: [['env', {
-                targets: {
-                  browsers: ['last 2 versions', 'ie >= 11']
+                "targets": {
+                  "browsers": ["last 2 versions", "ie >= 11"]
                 }
               }]],
               plugins: ['lodash']
@@ -41,39 +40,33 @@ const config = {
           }
         ]
       }
-    ]
+    ],
   },
-  plugins: [],
+  plugins: [
+    new ExtractTextPlugin('feed.css')
+  ],
 };
 
 if (isProduction) {
-  config.plugins = config.plugins.concat([
+  basicConfig.plugins = basicConfig.plugins.concat([
     new webpack.optimize.UglifyJsPlugin(),
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
-    new ExtractTextPlugin('feed.css'),
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': '"production"'
-    })
-  ]);
-} else {
-  config.plugins = config.plugins.concat([
-    new ExtractTextPlugin({
-      filename: 'feed.css',
-      disable: true,
+      'process.env.NODE_ENV': 'production',
     }),
   ]);
-
-  config.module.rules[0].use = ['css-hot-loader'].concat(config.module.rules[0].use);
-
-  config.devServer = {
-    contentBase: path.resolve(__dirname, 'public'),
+} else {
+  basicConfig.devServer = {
+    contentBase: path.join(__dirname, "public"),
     publicPath: '/feed/',
+    compress: true,
     port: 9000,
     proxy: {
-      '/data': 'http://localhost:3000'
+      "/data": "http://localhost:3000"
     },
-  }
+  };
 
+  basicConfig.module.rules[0].use = ['css-hot-loader'].concat(basicConfig.module.rules[0].use);
 }
 
-module.exports = config;
+module.exports = basicConfig;
