@@ -43,7 +43,7 @@ const config = {
       }
     ]
   },
-  plugins: []
+  plugins: [],
 };
 
 if (isProduction) {
@@ -62,6 +62,16 @@ if (isProduction) {
       disable: true,
     }),
   ]);
+
+  config.devServer = {
+    contentBase: path.resolve(__dirname, 'public'),
+    publicPath: '/feed/',
+    port: 9000,
+    proxy: {
+      '/data': 'http://localhost:3000'
+    },
+  }
+
 }
 
 module.exports = config;

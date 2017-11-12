@@ -37,7 +37,7 @@ const addNewRecord = (content) => {
 
 const generateRecord = (date, content) => {
     return `<section class="record">
-        <div class="record__date">${moment(date).format('D MMM YYYY')}</div>
+        <div class="record__date">at ${moment(date).format('D MMM YYYY')}</div>
         <div class="record__content">${content}</div>
     </section>`;
 }

@@ -4,7 +4,7 @@
   "scripts": {
     "server": "node ./server/index.js",
     "build": "NODE_ENV=production webpack",
-    "dev": "webpack"
+    "dev": "webpack-dev-server --hot --inline"
   },
   "private": true,
   "devDependencies": {
