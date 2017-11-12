@@ -2,7 +2,9 @@ const path = require('path');
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-module.exports = {
+const isProduction = process.env.NODE_ENV === "production";
+
+const config = {
   entry: './src/feed/index.js',
   output: {
     path: path.resolve(__dirname, 'public', 'feed'),
@@ -41,12 +43,25 @@ module.exports = {
       }
     ]
   },
-  plugins: [
+  plugins: []
+};
+
+if (isProduction) {
+  config.plugins = config.plugins.concat([
     new webpack.optimize.UglifyJsPlugin(),
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
     new ExtractTextPlugin('feed.css'),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': '"production"'
     })
-  ]
+  ]);
+} else {
+  config.plugins = config.plugins.concat([
+    new ExtractTextPlugin({
+      filename: 'feed.css',
+      disable: true,
+    }),
+  ]);
 }
+
+module.exports = config;
