@@ -23,8 +23,7 @@ addPostForm.addEventListener('submit', (event) => {
 const renderData = (data) => {
     const target = document.querySelector('#records');
 
-    const html = _(data.items)
-        .map(item => generateRecord(item.date, markdown.toHTML(item.content)))
+    const html = _.map(data.items, item => generateRecord(item.date, markdown.toHTML(item.content)))
         .join('');
 
     target.innerHTML += html;
