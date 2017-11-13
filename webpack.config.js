@@ -7,10 +7,10 @@ const isProduction = process.env.NODE_ENV === 'production';
 const basicConfig = {
   entry: {
     home: './src/Home/index.js',
-    feed: './src/feed/index.js'
+    feed: './src/Feed/index.js'
   },
   output: {
-    path: path.resolve(__dirname, 'public', 'js'),
+    path: path.resolve(__dirname, 'public', 'assets'),
     filename: '[name].js'
   },
   module: {
@@ -57,11 +57,14 @@ if (isProduction) {
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': 'production',
     }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'common',
+    }),
   ]);
 } else {
   basicConfig.devServer = {
     contentBase: path.join(__dirname, "public"),
-    publicPath: '/feed/',
+    publicPath: '/Feed/',
     compress: true,
     port: 9000,
     proxy: {
